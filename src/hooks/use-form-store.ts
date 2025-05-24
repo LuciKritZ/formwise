@@ -10,7 +10,14 @@ export const useFormStore = () => {
   const setSelectedFieldId = useFormStoreBase((s) => s.setSelectedFieldId);
   const moveField = useFormStoreBase((s) => s.moveField);
   const setFormFields = useFormStoreBase((s) => s.setFormFields);
-  const getSelectedField = useFormStoreBase((s) => s.getSelectedField);
+  const selectedField = useFormStoreBase((s) => {
+    const { formFields, selectedFieldId } = s;
+    if (!selectedFieldId) {
+      return null;
+    }
+
+    return formFields.find((field) => field.key === selectedFieldId) ?? null;
+  });
 
   return {
     formFields,
@@ -22,6 +29,6 @@ export const useFormStore = () => {
     setSelectedFieldId,
     moveField,
     setFormFields,
-    getSelectedField,
+    selectedField,
   };
 };

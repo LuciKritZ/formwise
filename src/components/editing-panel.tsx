@@ -14,11 +14,11 @@ import { FormField } from '@/types/field';
 import { Input } from './ui/input';
 
 export const EditingPanel = () => {
-  const { getSelectedField, setSelectedFieldId, selectedFieldId, updateField } =
+  const { selectedField, setSelectedFieldId, selectedFieldId, updateField } =
     useFormStore();
 
   const [fieldProperties, setFieldProperties] = useState<FormField | null>(
-    getSelectedField()
+    selectedField ? { ...selectedField } : null
   );
 
   if (!selectedFieldId) {

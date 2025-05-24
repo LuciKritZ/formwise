@@ -13,12 +13,11 @@ type FormState = {
   updateField: (updatedField: FormField) => void;
   setFormFields: (updatedFields: FormField[]) => void;
   setSelectedFieldId: (id: string | null) => void;
-  getSelectedField: () => FormField | null;
 };
 
 export const useFormStoreBase = create<FormState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       formFields: [],
       selectedFieldId: null,
 
@@ -55,12 +54,6 @@ export const useFormStoreBase = create<FormState>()(
         })),
 
       clearForm: () => set({ formFields: [], selectedFieldId: null }),
-
-      getSelectedField: () => {
-        const { formFields, selectedFieldId } = get();
-        if (!selectedFieldId) return null;
-        return formFields.find((field) => field.key === selectedFieldId) || null;
-      }
     }),
     {
       name: 'form-store',

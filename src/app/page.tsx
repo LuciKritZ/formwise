@@ -14,7 +14,7 @@ const FormBuilder = dynamic(() => import('@/components/form-builder'), {
 });
 
 export default function Home() {
-  const { formFields, addField, moveField } = useFormStore();
+  const { formFields, addField, moveField, selectedFieldId } = useFormStore();
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -49,7 +49,7 @@ export default function Home() {
         <div className='flex flex-row flex-1'>
           <FormBuilder />
           <PreviewPanel />
-          <EditingPanel />
+          {selectedFieldId && <EditingPanel />}
         </div>
       </div>
     </DndContext>
