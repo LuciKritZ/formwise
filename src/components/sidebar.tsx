@@ -3,6 +3,8 @@
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { FormField } from '@/types/form';
+import { Card, CardHeader, CardContent } from './ui/card';
+import { Button } from './ui/button';
 
 export const fields: FormField[] = [
   { id: 'text', label: 'Text Input', key: 'text-input' },
@@ -10,43 +12,24 @@ export const fields: FormField[] = [
   { id: 'select', label: 'Select', key: 'select' },
 ];
 
-interface SidebarProps {
-  formFields: FormField[];
-  setFormFields: React.Dispatch<React.SetStateAction<FormField[]>>;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ formFields, setFormFields }) => {
-  const saveForm = () => {
-    localStorage.setItem('formwise_fields', JSON.stringify(formFields));
-    alert('Form saved locally!');
-  };
-
-  const loadForm = () => {
-    const saved = localStorage.getItem('formwise_fields');
-    if (saved) {
-      setFormFields(JSON.parse(saved));
-      alert('Form loaded!');
-    } else {
-      alert('No saved form found.');
-    }
-  };
-
+const Sidebar: React.FC = () => {
   return (
-    <aside className='w-60 bg-gray-100 p-4'>
-      <h2 className='font-bold mb-4'>Form Elements</h2>
-      <ul>
-        {fields.map((field) => (
-          <DraggableField key={field.id} id={field.id} label={field.label} />
-        ))}
-      </ul>
+    <aside className='w-64 bg-gray-100 p-4 border-r'>
+      <Card>
+        <CardHeader className='font-bold text-lg'>Form Elements</CardHeader>
 
-      <button onClick={saveForm} className='btn btn-primary'>
-        Save Form
-      </button>
-
-      <button onClick={loadForm} className='btn btn-primary'>
-        Load Form
-      </button>
+        <CardContent>
+          <div className='flex flex-col gap-2 mb-4'>
+            {fields.map((field) => (
+              <DraggableField
+                key={field.id}
+                id={field.id}
+                label={field.label}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </aside>
   );
 };
@@ -60,25 +43,20 @@ const DraggableField: React.FC<FormField> = ({ id, label }: FormField) => {
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : undefined,
     opacity: isDragging ? 0.5 : 1,
-    padding: '0.5rem 1rem',
-    marginBottom: '0.5rem',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    backgroundColor: 'white',
     cursor: 'grab',
-    userSelect: 'none',
   };
 
   return (
-    <li
+    <Button
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      className='p-2 mb-2 bg-white rounded border cursor-grab'
+      className='justify-start'
+      variant='outline'
     >
       {label}
-    </li>
+    </Button>
   );
 };
 
