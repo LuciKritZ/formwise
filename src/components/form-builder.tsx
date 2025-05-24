@@ -10,6 +10,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { Button } from './ui/button';
 import { toast } from '@/hooks/use-toast';
 import { useFormStore } from '@/hooks/use-form-store';
+import { TrashIcon } from 'lucide-react';
 
 const FormBuilder: FC = () => {
   const {
@@ -125,6 +126,7 @@ function SortableItem({
     backgroundColor: 'white',
     cursor: 'pointer',
     display: 'flex',
+    alignItems: 'center',
   };
 
   return (
@@ -146,15 +148,19 @@ function SortableItem({
         ☰
       </div>
 
-      <div className='flex-1 px-2'>{label}</div>
+      <div className='flex-1 px-2 items-center'>{label}</div>
 
-      <button
-        onClick={() => onDelete(id)}
-        className='text-red-500 hover:text-red-700'
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(id);
+        }}
+        className='text-red-500 hover:text-red-700 p-2'
         aria-label={`Delete ${label}`}
+        variant='outline'
       >
-        🗑️
-      </button>
+        <TrashIcon className='size-4' />
+      </Button>
     </div>
   );
 }
