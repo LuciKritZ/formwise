@@ -1,13 +1,8 @@
-'use client';
-
 import React from 'react';
-import { FormField } from '@/types/form';
+import { useFormStore } from '@/hooks/use-form-store';
 
-interface PreviewPanelProps {
-  formFields: FormField[];
-}
-
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ formFields }) => {
+const PreviewPanel: React.FC = () => {
+  const { formFields } = useFormStore();
   return (
     <aside className='w-1/3 bg-gray-50 p-4 border-l overflow-auto'>
       <h2 className='font-bold mb-4'>Live Preview</h2>

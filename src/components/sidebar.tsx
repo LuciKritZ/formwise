@@ -1,16 +1,9 @@
-'use client';
-
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { FormField } from '@/types/form';
+import { FormField } from '@/types/field';
 import { Card, CardHeader, CardContent } from './ui/card';
 import { Button } from './ui/button';
-
-export const fields: FormField[] = [
-  { id: 'text', label: 'Text Input', key: 'text-input' },
-  { id: 'checkbox', label: 'Checkbox', key: 'checkbox' },
-  { id: 'select', label: 'Select', key: 'select' },
-];
+import { FIELDS } from '@/constants/fields';
 
 const Sidebar: React.FC = () => {
   return (
@@ -20,7 +13,7 @@ const Sidebar: React.FC = () => {
 
         <CardContent>
           <div className='flex flex-col gap-2 mb-4'>
-            {fields.map((field) => (
+            {FIELDS.map((field) => (
               <DraggableField
                 key={field.id}
                 id={field.id}
