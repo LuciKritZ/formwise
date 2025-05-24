@@ -9,6 +9,8 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { FormField } from '@/types/form';
 import { useDroppable } from '@dnd-kit/core';
+import { Button } from './ui/button';
+import { toast } from '@/hooks/use-toast';
 
 interface FormBuilderProps {
   formFields: FormField[];
@@ -17,6 +19,38 @@ interface FormBuilderProps {
 
 const FormBuilder: FC<FormBuilderProps> = ({ formFields, setFormFields }) => {
   const { setNodeRef } = useDroppable({ id: 'form-builder' });
+
+  const saveForm = () => {
+    try {
+      localStorage.setItem('formwise_fields', JSON.stringify(formFields));
+      toast({
+        title: 'Form saved locally!',
+        variant: 'default',
+      });
+    } catch {
+      toast({
+        title: 'Error saving form locally.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const loadForm = () => {
+    const saved = localStorage.getItem('formwise_fields');
+    if (saved) {
+      setFormFields(JSON.parse(saved));
+      toast({
+        title: 'Form loaded locally!',
+        variant: 'default',
+      });
+    } else {
+      toast({
+        title: 'No saved form found.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -42,6 +76,15 @@ const FormBuilder: FC<FormBuilderProps> = ({ formFields, setFormFields }) => {
           />
         ))}
       </SortableContext>
+
+      <div className='flex gap-4 p-4'>
+        <Button onClick={saveForm} variant='default'>
+          Save
+        </Button>
+        <Button onClick={loadForm} variant='secondary'>
+          Load
+        </Button>
+      </div>
     </div>
   );
 };

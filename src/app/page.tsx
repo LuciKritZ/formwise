@@ -2,6 +2,7 @@
 
 import PreviewPanel from '@/components/preview-panel';
 import { fields } from '@/components/sidebar';
+import { Toaster } from '@/components/ui/toaster';
 import { FormField } from '@/types/form';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import dynamic from 'next/dynamic';
@@ -50,10 +51,13 @@ export default function Home() {
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className='flex h-screen w-screen'>
-        <Sidebar formFields={formFields} setFormFields={setFormFields} />
-        <FormBuilder formFields={formFields} setFormFields={setFormFields} />
-        <PreviewPanel formFields={formFields} />
+      <Toaster />
+      <div className='flex h-screen w-screen bg-background text-gray-900 font-sans'>
+        <Sidebar />
+        <div className='flex flex-row flex-1'>
+          <FormBuilder formFields={formFields} setFormFields={setFormFields} />
+          <PreviewPanel formFields={formFields} />
+        </div>
       </div>
     </DndContext>
   );
