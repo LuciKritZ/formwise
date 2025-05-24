@@ -1,5 +1,3 @@
-'use client';
-
 import React, { FC } from 'react';
 import {
   SortableContext,
@@ -7,17 +5,21 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { FormField } from '@/types/form';
+import { FormField } from '@/types/field';
 import { useDroppable } from '@dnd-kit/core';
 import { Button } from './ui/button';
 import { toast } from '@/hooks/use-toast';
+import { useFormStore } from '@/hooks/use-form-store';
+import { TrashIcon } from 'lucide-react';
 
-interface FormBuilderProps {
-  formFields: FormField[];
-  setFormFields: React.Dispatch<React.SetStateAction<FormField[]>>;
-}
-
-const FormBuilder: FC<FormBuilderProps> = ({ formFields, setFormFields }) => {
+const FormBuilder: FC = () => {
+  const {
+    formFields,
+    setFormFields,
+    removeField,
+    selectedFieldId,
+    setSelectedFieldId,
+  } = useFormStore();
   const { setNodeRef } = useDroppable({ id: 'form-builder' });
 
   const saveForm = () => {
@@ -70,9 +72,9 @@ const FormBuilder: FC<FormBuilderProps> = ({ formFields, setFormFields }) => {
             key={field.key}
             id={field.key}
             label={field.label}
-            onDelete={(id) =>
-              setFormFields((prev) => prev.filter((f) => f.key !== id))
-            }
+            onDelete={(id) => removeField(id)}
+            onSelect={(id) => setSelectedFieldId(id)}
+            isSelected={selectedFieldId === field.key}
           />
         ))}
       </SortableContext>
@@ -93,9 +95,17 @@ export default FormBuilder;
 
 interface SortableItemProps extends FormField {
   onDelete: (id: string) => void;
+  onSelect: (id: string) => void;
+  isSelected: boolean;
 }
 
-function SortableItem({ id, label, onDelete }: SortableItemProps) {
+function SortableItem({
+  id,
+  label,
+  onDelete,
+  onSelect,
+  isSelected,
+}: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -111,15 +121,23 @@ function SortableItem({ id, label, onDelete }: SortableItemProps) {
     opacity: isDragging ? 0.5 : 1,
     padding: '0.5rem 1rem',
     marginBottom: '0.5rem',
-    border: '1px solid #ddd',
+    border: `2px solid ${isSelected ? '#3b82f6' : '#ddd'}`,
     borderRadius: '0.25rem',
     backgroundColor: 'white',
-    cursor: 'grab',
+    cursor: 'pointer',
     display: 'flex',
+    alignItems: 'center',
   };
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(id);
+      }}
+    >
       {/* Left: Drag handle only */}
       <div
         {...attributes}
@@ -130,15 +148,19 @@ function SortableItem({ id, label, onDelete }: SortableItemProps) {
         ☰
       </div>
 
-      <div className='flex-1 px-2'>{label}</div>
+      <div className='flex-1 px-2 items-center'>{label}</div>
 
-      <button
-        onClick={() => onDelete(id)}
-        className='text-red-500 hover:text-red-700'
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(id);
+        }}
+        className='text-red-500 hover:text-red-700 p-2'
         aria-label={`Delete ${label}`}
+        variant='outline'
       >
-        🗑️
-      </button>
+        <TrashIcon className='size-4' />
+      </Button>
     </div>
   );
 }

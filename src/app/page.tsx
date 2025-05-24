@@ -1,12 +1,12 @@
 'use client';
 
+import { EditingPanel } from '@/components/editing-panel';
 import PreviewPanel from '@/components/preview-panel';
-import { fields } from '@/components/sidebar';
 import { Toaster } from '@/components/ui/toaster';
-import { FormField } from '@/types/form';
+import { FIELDS } from '@/constants/fields';
+import { useFormStore } from '@/hooks/use-form-store';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
 
 const Sidebar = dynamic(() => import('@/components/sidebar'), { ssr: false });
 const FormBuilder = dynamic(() => import('@/components/form-builder'), {
@@ -14,25 +14,22 @@ const FormBuilder = dynamic(() => import('@/components/form-builder'), {
 });
 
 export default function Home() {
-  const [formFields, setFormFields] = useState<FormField[]>([]);
+  const { formFields, addField, moveField, selectedFieldId } = useFormStore();
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over) return;
 
     // Check if active is one of Sidebar fields by matching id in fields array
-    const draggedField = fields.find((f) => f.id === active.id);
+    const draggedField = FIELDS.find((f) => f.id === active.id);
 
     // If dragging from Sidebar and dropped on FormBuilder container
     if (draggedField && over.id === 'form-builder') {
-      setFormFields((fields) => [
-        ...fields,
-        {
-          ...draggedField,
-          // Make key unique by appending timestamp or random string
-          key: `${draggedField.key}-${Date.now()}`,
-        },
-      ]);
+      addField({
+        ...draggedField,
+        // Make key unique by appending timestamp or random string
+        key: `${draggedField.key}-${Date.now()}`,
+      });
       return;
     }
 
@@ -40,12 +37,7 @@ export default function Home() {
     const newIndex = formFields.findIndex((f) => f.key === over.id);
 
     if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
-      setFormFields((fields) => {
-        const newFields = [...fields];
-        const [moved] = newFields.splice(oldIndex, 1);
-        newFields.splice(newIndex, 0, moved);
-        return newFields;
-      });
+      moveField(oldIndex, newIndex);
     }
   }
 
@@ -55,8 +47,9 @@ export default function Home() {
       <div className='flex h-screen w-screen bg-background text-gray-900 font-sans'>
         <Sidebar />
         <div className='flex flex-row flex-1'>
-          <FormBuilder formFields={formFields} setFormFields={setFormFields} />
-          <PreviewPanel formFields={formFields} />
+          <FormBuilder />
+          <PreviewPanel />
+          {selectedFieldId && <EditingPanel />}
         </div>
       </div>
     </DndContext>
