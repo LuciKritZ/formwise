@@ -15,7 +15,7 @@ interface FormBuilderProps {
   setFormFields: React.Dispatch<React.SetStateAction<FormField[]>>;
 }
 
-const FormBuilder: FC<FormBuilderProps> = ({ formFields }) => {
+const FormBuilder: FC<FormBuilderProps> = ({ formFields, setFormFields }) => {
   const { setNodeRef } = useDroppable({ id: 'form-builder' });
   return (
     <div
@@ -32,7 +32,14 @@ const FormBuilder: FC<FormBuilderProps> = ({ formFields }) => {
           <p className='text-gray-400'>Drag form elements here</p>
         )}
         {formFields.map((field) => (
-          <SortableItem key={field.key} id={field.key} label={field.label} />
+          <SortableItem
+            key={field.key}
+            id={field.key}
+            label={field.label}
+            onDelete={(id) =>
+              setFormFields((prev) => prev.filter((f) => f.key !== id))
+            }
+          />
         ))}
       </SortableContext>
     </div>
@@ -41,12 +48,11 @@ const FormBuilder: FC<FormBuilderProps> = ({ formFields }) => {
 
 export default FormBuilder;
 
-interface SortableItemProps {
-  id: string;
-  label: string;
+interface SortableItemProps extends FormField {
+  onDelete: (id: string) => void;
 }
 
-function SortableItem({ id, label }: SortableItemProps) {
+function SortableItem({ id, label, onDelete }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -66,11 +72,30 @@ function SortableItem({ id, label }: SortableItemProps) {
     borderRadius: '0.25rem',
     backgroundColor: 'white',
     cursor: 'grab',
+    display: 'flex',
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {label}
+    <div ref={setNodeRef} style={style}>
+      {/* Left: Drag handle only */}
+      <div
+        {...attributes}
+        {...listeners}
+        className='cursor-grab text-gray-500 hover:text-black'
+        title='Drag to reorder'
+      >
+        ☰
+      </div>
+
+      <div className='flex-1 px-2'>{label}</div>
+
+      <button
+        onClick={() => onDelete(id)}
+        className='text-red-500 hover:text-red-700'
+        aria-label={`Delete ${label}`}
+      >
+        🗑️
+      </button>
     </div>
   );
 }
