@@ -11,11 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useFormStore } from '@/hooks/use-form-store';
 import { useEffect, useState } from 'react';
-import { BasicFieldInfo, FormField, ValidationRules } from '@/types/field';
-
-import { Input } from './ui/input';
-import { ValidationEditor } from './editors/validation-editor';
-import { BasicFieldEditor } from './editors/basic-editor';
+import { BasicFieldInfo, LayoutInfo, ValidationRules } from '@/types/field';
+import { BasicFieldEditor, ValidationEditor, LayoutEditor } from './editors';
 
 export const EditingPanel = () => {
   const { selectedField, setSelectedFieldId, selectedFieldId, updateField } =
@@ -26,11 +23,15 @@ export const EditingPanel = () => {
   const [basicFieldInfo, setBasicFieldInfo] = useState<BasicFieldInfo | null>(
     selectedField?.basic ?? null
   );
+  const [layoutInfo, setLayoutInfo] = useState<LayoutInfo | null>(
+    selectedField?.layout ?? null
+  );
 
   useEffect(() => {
     if (selectedField) {
-      setLocalValidations(selectedField.validations || {});
-      setBasicFieldInfo(selectedField.basic || {});
+      setLocalValidations(selectedField.validations ?? {});
+      setBasicFieldInfo(selectedField.basic ?? {});
+      setLayoutInfo(selectedField?.layout ?? {});
     }
   }, [selectedField]);
 
@@ -40,12 +41,6 @@ export const EditingPanel = () => {
 
   const onClose = () => {
     setSelectedFieldId(null);
-  };
-
-  const updateFieldValue = (key: string, value: string) => {
-    setBasicFieldInfo((fieldProps) => {
-      return fieldProps ? { ...fieldProps, [key]: value } : null;
-    });
   };
 
   const onSave = () => {
@@ -62,15 +57,17 @@ export const EditingPanel = () => {
       newField.validations = localValidations;
     }
 
-    if (selectedField) {
-      updateField(newField);
+    if (layoutInfo) {
+      newField.layout = layoutInfo;
     }
+
+    updateField(newField);
     onClose();
   };
 
   return (
     <Sheet open={!!selectedFieldId} onOpenChange={onClose}>
-      <SheetContent className='p-4 space-y-4'>
+      <SheetContent aria-describedby='' className='p-4 space-y-4'>
         <SheetHeader>
           <SheetTitle>Edit Field</SheetTitle>
         </SheetHeader>
@@ -88,6 +85,13 @@ export const EditingPanel = () => {
           <BasicFieldEditor
             basicFieldInfo={basicFieldInfo}
             onChange={(newBasicInfo) => setBasicFieldInfo(newBasicInfo)}
+          />
+        )}
+
+        {layoutInfo && (
+          <LayoutEditor
+            layoutInfo={layoutInfo}
+            onChange={(newLayoutInfo) => setLayoutInfo(newLayoutInfo)}
           />
         )}
 

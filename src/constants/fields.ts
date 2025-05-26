@@ -1,4 +1,4 @@
-import { BasicFieldInfo, FormField } from "@/types/field";
+import { FormField } from "@/types/field";
 
 export const FIELDS: FormField[] = [
   {
@@ -20,3 +20,6 @@ export const FIELDS: FormField[] = [
     }
   },
 ];
+
+export const WIDTH_OPTIONS = ['half', 'full', 'third'] as const;
+export const ALIGN_OPTIONS = ['left', 'center', 'right'];
