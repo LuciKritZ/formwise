@@ -1,25 +1,38 @@
 'use client';
 
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer';
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useFormStore } from '@/hooks/use-form-store';
-import { useState } from 'react';
-import { FormField } from '@/types/field';
+import { useEffect, useState } from 'react';
+import { BasicFieldInfo, FormField, ValidationRules } from '@/types/field';
+
 import { Input } from './ui/input';
+import { ValidationEditor } from './editors/validation-editor';
+import { BasicFieldEditor } from './editors/basic-editor';
 
 export const EditingPanel = () => {
   const { selectedField, setSelectedFieldId, selectedFieldId, updateField } =
     useFormStore();
 
-  const [fieldProperties, setFieldProperties] = useState<FormField | null>(
-    selectedField ? { ...selectedField } : null
+  const [localValidations, setLocalValidations] =
+    useState<ValidationRules | null>(selectedField?.validations ?? null);
+  const [basicFieldInfo, setBasicFieldInfo] = useState<BasicFieldInfo | null>(
+    selectedField?.basic ?? null
   );
+
+  useEffect(() => {
+    if (selectedField) {
+      setLocalValidations(selectedField.validations || {});
+      setBasicFieldInfo(selectedField.basic || {});
+    }
+  }, [selectedField]);
 
   if (!selectedFieldId) {
     return;
@@ -30,45 +43,63 @@ export const EditingPanel = () => {
   };
 
   const updateFieldValue = (key: string, value: string) => {
-    setFieldProperties((fieldProps) => {
+    setBasicFieldInfo((fieldProps) => {
       return fieldProps ? { ...fieldProps, [key]: value } : null;
     });
   };
 
   const onSave = () => {
-    if (!fieldProperties) {
+    if (!selectedField) {
       return;
     }
-    updateField(fieldProperties);
+    const newField = { ...selectedField };
+
+    if (basicFieldInfo) {
+      newField.basic = { ...basicFieldInfo };
+    }
+
+    if (localValidations) {
+      newField.validations = localValidations;
+    }
+
+    if (selectedField) {
+      updateField(newField);
+    }
     onClose();
   };
 
   return (
-    <Drawer open={!!selectedFieldId} onOpenChange={onClose}>
-      <DrawerContent className='p-4 space-y-4'>
-        <DrawerHeader>
-          <DrawerTitle>Edit Field</DrawerTitle>
-        </DrawerHeader>
+    <Sheet open={!!selectedFieldId} onOpenChange={onClose}>
+      <SheetContent className='p-4 space-y-4'>
+        <SheetHeader>
+          <SheetTitle>Edit Field</SheetTitle>
+        </SheetHeader>
+
+        {localValidations && (
+          <ValidationEditor
+            validations={localValidations}
+            onChange={(newValidations) => setLocalValidations(newValidations)}
+          />
+        )}
 
         <Separator />
 
-        {/* Replace this with dynamic form inputs for the selected field */}
-        <div className='space-y-2'>
-          <label className='block text-sm font-medium'>Label</label>
-          <Input
-            className='w-full px-3 py-2 border rounded'
-            value={fieldProperties?.label || ''}
-            onChange={(e) => updateFieldValue('label', e.target.value)}
+        {basicFieldInfo && (
+          <BasicFieldEditor
+            basicFieldInfo={basicFieldInfo}
+            onChange={(newBasicInfo) => setBasicFieldInfo(newBasicInfo)}
           />
-        </div>
+        )}
 
-        <div className='flex justify-end gap-2 mt-4'>
-          <Button variant='ghost' onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={onSave}>Save</Button>
-        </div>
-      </DrawerContent>
-    </Drawer>
+        <SheetFooter>
+          <div className='flex justify-end gap-2 mt-4'>
+            <Button variant='ghost' onClick={onClose}>
+              Cancel
+            </Button>
+            <Button onClick={onSave}>Save</Button>
+          </div>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 };

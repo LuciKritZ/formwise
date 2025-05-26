@@ -1,7 +1,22 @@
-import { FormField } from "@/types/field";
+import { BasicFieldInfo, FormField } from "@/types/field";
 
 export const FIELDS: FormField[] = [
-  { id: 'text', label: 'Text Input', key: 'text-input' },
-  { id: 'checkbox', label: 'Checkbox', key: 'checkbox' },
-  { id: 'select', label: 'Select', key: 'select' },
+  {
+    id: 'text', key: 'text-input', basic: {
+      label: 'Text Input', description: '',
+      placeholder: '',
+    }
+  },
+  {
+    id: 'checkbox', key: 'checkbox', basic: {
+      label: 'Checkbox', description: '',
+      placeholder: '',
+    }
+  },
+  {
+    id: 'select', key: 'select', basic: {
+      label: 'Select', description: '',
+      placeholder: '',
+    }
+  },
 ];

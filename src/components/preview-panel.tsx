@@ -1,5 +1,7 @@
 import React from 'react';
 import { useFormStore } from '@/hooks/use-form-store';
+import { Checkbox } from './ui/checkbox';
+import { Label } from './ui/label';
 
 const PreviewPanel: React.FC = () => {
   const { formFields } = useFormStore();
@@ -17,27 +19,27 @@ const PreviewPanel: React.FC = () => {
                 return (
                   <div key={field.key}>
                     <label className='block mb-1 font-medium'>
-                      {field.label}
+                      {field.basic?.label}
                     </label>
                     <input
                       type='text'
                       className='w-full px-3 py-2 border rounded'
-                      placeholder={field.label}
+                      placeholder={field.basic?.label}
                     />
                   </div>
                 );
               case 'checkbox':
                 return (
                   <div key={field.key} className='flex items-center space-x-2'>
-                    <input type='checkbox' id={field.key} />
-                    <label htmlFor={field.key}>{field.label}</label>
+                    <Checkbox id={field.key} />
+                    <Label htmlFor={field.key}>{field.basic?.label}</Label>
                   </div>
                 );
               case 'select':
                 return (
                   <div key={field.key}>
                     <label className='block mb-1 font-medium'>
-                      {field.label}
+                      {field.basic?.label}
                     </label>
                     <select className='w-full px-3 py-2 border rounded'>
                       <option>Option 1</option>
