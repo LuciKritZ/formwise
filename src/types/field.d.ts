@@ -1,10 +1,18 @@
+import { WIDTH_OPTIONS } from "@/constants/fields";
+
 export interface FormField {
   id: string;
   key: string;
-  required?: boolean;
   type?: string;
   validations?: ValidationRules;
   basic: BasicFieldInfo;
+  layout?: LayoutInfo;
+}
+
+export interface LayoutInfo {
+  width?: typeof WIDTH_OPTIONS[number];
+  align?: 'left' | 'center' | 'right';
+  hidden?: boolean;
 }
 
 export interface BasicFieldInfo {

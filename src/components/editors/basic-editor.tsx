@@ -1,16 +1,17 @@
 import { BasicFieldInfo } from '@/types/field';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
+import { FC } from 'react';
 
-interface BasicEditorSettingsProps {
+interface BasicFieldEditorProps {
   basicFieldInfo: BasicFieldInfo;
   onChange: (newData: BasicFieldInfo) => void;
 }
 
-export function BasicFieldEditor({
+const BasicFieldEditor: FC<BasicFieldEditorProps> = ({
   basicFieldInfo,
   onChange,
-}: BasicEditorSettingsProps) {
+}: BasicFieldEditorProps) => {
   const updateBasicKey = <K extends keyof BasicFieldInfo>(
     key: K,
     value: BasicFieldInfo[K]
@@ -19,7 +20,7 @@ export function BasicFieldEditor({
   };
 
   return (
-    <div className='space-y-3'>
+    <div className='space-y-4'>
       <h3 className='font-semibold text-lg'>Basic Info</h3>
 
       <div className='space-y-2'>
@@ -50,4 +51,6 @@ export function BasicFieldEditor({
       </div>
     </div>
   );
-}
+};
+
+export default BasicFieldEditor;

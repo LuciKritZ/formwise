@@ -1,5 +1,5 @@
 import { ValidationRules } from '@/types/field';
-import React from 'react';
+import React, { FC } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
@@ -9,10 +9,10 @@ interface ValidationEditorProps {
   onChange: (newValidations: ValidationRules) => void;
 }
 
-export function ValidationEditor({
+const ValidationEditor: FC<ValidationEditorProps> = ({
   validations,
   onChange,
-}: ValidationEditorProps) {
+}: ValidationEditorProps) => {
   const updateRule = <K extends keyof ValidationRules>(
     key: K,
     value: ValidationRules[K]
@@ -94,4 +94,6 @@ export function ValidationEditor({
       </div>
     </div>
   );
-}
+};
+
+export default ValidationEditor;
