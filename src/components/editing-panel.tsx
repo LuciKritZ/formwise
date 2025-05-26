@@ -2,6 +2,7 @@
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetFooter,
   SheetHeader,
@@ -17,6 +18,9 @@ import { BasicFieldEditor, ValidationEditor, LayoutEditor } from './editors';
 export const EditingPanel = () => {
   const { selectedField, setSelectedFieldId, selectedFieldId, updateField } =
     useFormStore();
+
+  // For smooth animations while closing the sheet
+  const [isSheetOpen, setSheetOpen] = useState<boolean>(true);
 
   const [localValidations, setLocalValidations] =
     useState<ValidationRules | null>(selectedField?.validations ?? null);
@@ -40,7 +44,11 @@ export const EditingPanel = () => {
   }
 
   const onClose = () => {
-    setSelectedFieldId(null);
+    setSheetOpen(false);
+    setTimeout(() => {
+      // Waiting for the animation to complete
+      setSelectedFieldId(null);
+    }, 400);
   };
 
   const onSave = () => {
@@ -66,8 +74,8 @@ export const EditingPanel = () => {
   };
 
   return (
-    <Sheet open={!!selectedFieldId} onOpenChange={onClose}>
-      <SheetContent aria-describedby='' className='p-4 space-y-4'>
+    <Sheet open={isSheetOpen} onOpenChange={onClose} modal>
+      <SheetContent aria-describedby='' className='overflow-y-scroll space-y-4'>
         <SheetHeader>
           <SheetTitle>Edit Field</SheetTitle>
         </SheetHeader>
@@ -96,12 +104,16 @@ export const EditingPanel = () => {
         )}
 
         <SheetFooter>
-          <div className='flex justify-end gap-2 mt-4'>
-            <Button variant='ghost' onClick={onClose}>
-              Cancel
-            </Button>
-            <Button onClick={onSave}>Save</Button>
-          </div>
+          <SheetClose asChild>
+            <div className='flex justify-end gap-2 mt-4'>
+              <Button variant='ghost' onClick={onClose} type='submit'>
+                Cancel
+              </Button>
+              <Button onClick={onSave} type='submit'>
+                Save
+              </Button>
+            </div>
+          </SheetClose>
         </SheetFooter>
       </SheetContent>
     </Sheet>

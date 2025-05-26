@@ -1,4 +1,4 @@
-import { WIDTH_OPTIONS } from "@/constants/fields";
+import { ALIGN_OPTIONS, WIDTH_OPTIONS } from "@/constants/fields";
 
 export interface FormField {
   id: string;
@@ -11,7 +11,7 @@ export interface FormField {
 
 export interface LayoutInfo {
   width?: typeof WIDTH_OPTIONS[number];
-  align?: 'left' | 'center' | 'right';
+  align?: typeof ALIGN_OPTIONS[number];
   hidden?: boolean;
 }
 
