@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
               <DraggableField
                 key={field.id}
                 id={field.id}
-                label={field.label}
+                label={field.basic?.label ?? ''}
               />
             ))}
           </div>
@@ -27,7 +27,15 @@ const Sidebar: React.FC = () => {
   );
 };
 
-const DraggableField: React.FC<FormField> = ({ id, label }: FormField) => {
+interface DraggableFieldType {
+  id: string;
+  label: string;
+}
+
+const DraggableField: React.FC<DraggableFieldType> = ({
+  id,
+  label,
+}: DraggableFieldType) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id });
 

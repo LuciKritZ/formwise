@@ -71,7 +71,7 @@ const FormBuilder: FC = () => {
           <SortableItem
             key={field.key}
             id={field.key}
-            label={field.label}
+            label={field.basic?.label}
             onDelete={(id) => removeField(id)}
             onSelect={(id) => setSelectedFieldId(id)}
             isSelected={selectedFieldId === field.key}
@@ -93,7 +93,8 @@ const FormBuilder: FC = () => {
 
 export default FormBuilder;
 
-interface SortableItemProps extends FormField {
+interface SortableItemProps extends Omit<FormField, 'basic'> {
+  label: string;
   onDelete: (id: string) => void;
   onSelect: (id: string) => void;
   isSelected: boolean;

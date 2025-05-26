@@ -1,4 +1,4 @@
-import { FormField } from '@/types/field';
+import { FormField, ValidationRules } from '@/types/field';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -13,6 +13,7 @@ type FormState = {
   updateField: (updatedField: FormField) => void;
   setFormFields: (updatedFields: FormField[]) => void;
   setSelectedFieldId: (id: string | null) => void;
+  updateFieldValidations: (id: string, validations: ValidationRules) => void;
 };
 
 export const useFormStoreBase = create<FormState>()(
@@ -54,6 +55,12 @@ export const useFormStoreBase = create<FormState>()(
         })),
 
       clearForm: () => set({ formFields: [], selectedFieldId: null }),
+
+      updateFieldValidations: (id: string, validations: ValidationRules) => set((state) => ({
+        formFields: state.formFields.map((f) =>
+          f.key === id ? { ...f, validations } : f
+        ),
+      })),
     }),
     {
       name: 'form-store',
