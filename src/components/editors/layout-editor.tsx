@@ -8,8 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { WIDTH_OPTIONS } from '@/constants/fields';
+import { ALIGN_OPTIONS, WIDTH_OPTIONS } from '@/constants/fields';
 import { Label } from '../ui/label';
+import { Checkbox } from '../ui/checkbox';
 
 type LayoutProps = {
   layoutInfo: LayoutInfo;
@@ -52,6 +53,41 @@ const LayoutEditor: FC<LayoutProps> = ({
             </SelectGroup>
           </SelectContent>
         </Select>
+      </div>
+
+      <div className='space-y-2'>
+        <Label className='block text-sm font-medium'>Align</Label>
+        <Select
+          onValueChange={(value) =>
+            updateLayoutInfo('align', value as LayoutInfo['align'])
+          }
+          value={layoutInfo?.align}
+        >
+          <SelectTrigger className='w-full'>
+            <SelectValue placeholder='Select alignment' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {ALIGN_OPTIONS.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className='items-center flex mx-auto gap-2'>
+        <Checkbox
+          id='checkbox-hidden'
+          onCheckedChange={(value) => {
+            updateLayoutInfo('hidden', !!value);
+          }}
+          checked={layoutInfo.hidden ?? false}
+          title='Hidden?'
+        />
+        <Label htmlFor='checkbox-hidden'>Hidden?</Label>
       </div>
     </div>
   );

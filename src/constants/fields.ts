@@ -22,4 +22,4 @@ export const FIELDS: FormField[] = [
 ];
 
 export const WIDTH_OPTIONS = ['half', 'full', 'third'] as const;
-export const ALIGN_OPTIONS = ['left', 'center', 'right'];
+export const ALIGN_OPTIONS = ['left', 'center', 'right'] as const;

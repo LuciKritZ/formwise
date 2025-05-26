@@ -32,7 +32,7 @@ const ValidationEditor: FC<ValidationEditorProps> = ({
           checked={validations.required ?? false}
           title='Required?'
         />
-        <Label htmlFor='checkbox-validation'>Required</Label>
+        <Label htmlFor='checkbox-validation'>Required?</Label>
       </div>
 
       <div className='space-y-2'>
