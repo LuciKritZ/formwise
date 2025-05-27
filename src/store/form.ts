@@ -50,7 +50,7 @@ export const useFormStoreBase = create<FormState>()(
       updateField: (updatedField) =>
         set((state) => ({
           formFields: state.formFields.map((f) =>
-            f.id === updatedField.id ? updatedField : f
+            f.key === updatedField.key ? updatedField : f
           ),
         })),
 

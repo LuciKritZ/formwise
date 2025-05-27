@@ -14,7 +14,7 @@ export function useDragAndDrop<T extends { key: string }>(initialItems: T[]) {
     if (!over) return;
 
     // Check if active is one of Sidebar fields by matching id in fields array
-    const draggedField = FIELDS.find((f) => f.id === active.id);
+    const draggedField = FIELDS.find((f) => f.key === active.id);
 
     // If dragging from Sidebar and dropped on FormBuilder container
     if (draggedField && over.id === 'form-builder') {

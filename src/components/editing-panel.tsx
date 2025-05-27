@@ -75,7 +75,10 @@ export const EditingPanel = () => {
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={onClose} modal>
-      <SheetContent aria-describedby='' className='overflow-y-scroll space-y-4'>
+      <SheetContent
+        aria-describedby=''
+        className='overflow-y-scroll space-y-4 min-w-[50%]'
+      >
         <SheetHeader>
           <SheetTitle>Edit Field</SheetTitle>
         </SheetHeader>
