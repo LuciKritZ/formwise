@@ -14,7 +14,7 @@ const PreviewPanel: React.FC = () => {
       ) : (
         <form className='space-y-4'>
           {formFields.map((field) => {
-            switch (field.id) {
+            switch (field.type) {
               case 'text':
                 return (
                   <div key={field.key}>

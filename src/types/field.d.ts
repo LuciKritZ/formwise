@@ -1,9 +1,10 @@
 import { ALIGN_OPTIONS, WIDTH_OPTIONS } from "@/constants/fields";
 
+type FieldType = 'text' | 'email' | 'textarea' | 'number' | 'checkbox' | 'select';
+
 export interface FormField {
-  id: string;
   key: string;
-  type?: string;
+  type: FieldType;
   validations?: ValidationRules;
   basic: BasicFieldInfo;
   layout?: LayoutInfo;

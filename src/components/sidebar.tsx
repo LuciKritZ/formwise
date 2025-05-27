@@ -15,8 +15,8 @@ const Sidebar: React.FC = () => {
           <div className='flex flex-col gap-2 mb-4'>
             {FIELDS.map((field) => (
               <DraggableField
-                key={field.id}
-                id={field.id}
+                key={field.key}
+                id={field.key}
                 label={field.basic?.label ?? ''}
               />
             ))}
