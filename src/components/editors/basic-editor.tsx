@@ -21,7 +21,7 @@ const BasicFieldEditor: FC<BasicFieldEditorProps> = ({
 
   return (
     <div className='space-y-4'>
-      <h3 className='font-semibold text-lg'>Basic Info</h3>
+      <h3 className='font-semibold text-lg underline'>Basic Info</h3>
 
       <div className='space-y-2'>
         <Label className='block text-sm font-medium'>Label</Label>

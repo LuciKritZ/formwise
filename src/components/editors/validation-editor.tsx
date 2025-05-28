@@ -22,7 +22,7 @@ const ValidationEditor: FC<ValidationEditorProps> = ({
 
   return (
     <div className='space-y-4 max-w-md'>
-      <h3 className='font-semibold text-lg'>Validation Rules</h3>
+      <h3 className='font-semibold text-lg underline'>Validation Rules</h3>
       <div className='items-center flex mx-auto gap-2'>
         <Checkbox
           id='checkbox-validation'

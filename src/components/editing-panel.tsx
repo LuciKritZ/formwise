@@ -14,62 +14,43 @@ import { useFormStore } from '@/hooks/use-form-store';
 import { useEffect, useState } from 'react';
 import { BasicFieldInfo, LayoutInfo, ValidationRules } from '@/types/field';
 import { BasicFieldEditor, ValidationEditor, LayoutEditor } from './editors';
+import { LivePreview } from './live-preview';
 
 export const EditingPanel = () => {
-  const { selectedField, setSelectedFieldId, selectedFieldId, updateField } =
+  const { selectedField, selectedFieldId, setSelectedFieldId, updateField } =
     useFormStore();
 
-  // For smooth animations while closing the sheet
-  const [isSheetOpen, setSheetOpen] = useState<boolean>(true);
+  const [isSheetOpen, setSheetOpen] = useState(true);
 
-  const [localValidations, setLocalValidations] =
-    useState<ValidationRules | null>(selectedField?.validations ?? null);
-  const [basicFieldInfo, setBasicFieldInfo] = useState<BasicFieldInfo | null>(
-    selectedField?.basic ?? null
-  );
-  const [layoutInfo, setLayoutInfo] = useState<LayoutInfo | null>(
-    selectedField?.layout ?? null
-  );
+  const [validations, setValidations] = useState<ValidationRules | null>(null);
+  const [basic, setBasic] = useState<BasicFieldInfo | null>(null);
+  const [layout, setLayout] = useState<LayoutInfo | null>(null);
 
   useEffect(() => {
     if (selectedField) {
-      setLocalValidations(selectedField.validations ?? {});
-      setBasicFieldInfo(selectedField.basic ?? {});
-      setLayoutInfo(selectedField?.layout ?? {});
+      setValidations(selectedField.validations ?? {});
+      setBasic(selectedField.basic ?? {});
+      setLayout(selectedField.layout ?? {});
     }
   }, [selectedField]);
 
-  if (!selectedFieldId) {
-    return;
-  }
+  if (!selectedFieldId) return null;
 
   const onClose = () => {
     setSheetOpen(false);
-    setTimeout(() => {
-      // Waiting for the animation to complete
-      setSelectedFieldId(null);
-    }, 400);
+    setTimeout(() => setSelectedFieldId(null), 400); // For closing animation
   };
 
   const onSave = () => {
-    if (!selectedField) {
-      return;
-    }
-    const newField = { ...selectedField };
+    if (!selectedField) return;
 
-    if (basicFieldInfo) {
-      newField.basic = { ...basicFieldInfo };
-    }
+    updateField({
+      ...selectedField,
+      basic: basic ?? selectedField.basic,
+      validations: validations ?? selectedField.validations,
+      layout: layout ?? selectedField.layout,
+    });
 
-    if (localValidations) {
-      newField.validations = localValidations;
-    }
-
-    if (layoutInfo) {
-      newField.layout = layoutInfo;
-    }
-
-    updateField(newField);
     onClose();
   };
 
@@ -77,44 +58,63 @@ export const EditingPanel = () => {
     <Sheet open={isSheetOpen} onOpenChange={onClose} modal>
       <SheetContent
         aria-describedby=''
-        className='overflow-y-scroll space-y-4 min-w-[50%]'
+        className='overflow-y-scroll space-y-6 min-w-[100%]'
       >
         <SheetHeader>
           <SheetTitle>Edit Field</SheetTitle>
         </SheetHeader>
 
-        {localValidations && (
-          <ValidationEditor
-            validations={localValidations}
-            onChange={(newValidations) => setLocalValidations(newValidations)}
-          />
-        )}
+        <div className='grid grid-cols-1 md:grid-cols-3'>
+          {/* Live Preview Section */}
+          {selectedField && basic && layout && validations && (
+            <div className='min-w-[300px] max-w-sm p-4 bg-muted border rounded-xl shadow-sm h-fit sticky top-4'>
+              <h4 className='text-lg font-medium mb-2 text-muted-foreground'>
+                Real-time Preview
+              </h4>
+              <LivePreview
+                field={{
+                  ...selectedField,
+                  basic,
+                  layout,
+                  validations,
+                }}
+              />
+            </div>
+          )}
 
-        <Separator />
+          {/* Field Editors Section */}
+          <div className='col-span-2 flex flex-col'>
+            <div className='flex'>
+              <div className='w-1/2 p-4 border border-gray-300'>
+                {validations && (
+                  <ValidationEditor
+                    validations={validations}
+                    onChange={setValidations}
+                  />
+                )}
+              </div>
+              <div className='w-1/2 p-4 border border-gray-300'>
+                {layout && (
+                  <LayoutEditor layoutInfo={layout} onChange={setLayout} />
+                )}
+              </div>
+            </div>
 
-        {basicFieldInfo && (
-          <BasicFieldEditor
-            basicFieldInfo={basicFieldInfo}
-            onChange={(newBasicInfo) => setBasicFieldInfo(newBasicInfo)}
-          />
-        )}
+            <div className='w-full p-4 border border-gray-300'>
+              {basic && (
+                <BasicFieldEditor basicFieldInfo={basic} onChange={setBasic} />
+              )}
+            </div>
+          </div>
+        </div>
 
-        {layoutInfo && (
-          <LayoutEditor
-            layoutInfo={layoutInfo}
-            onChange={(newLayoutInfo) => setLayoutInfo(newLayoutInfo)}
-          />
-        )}
-
-        <SheetFooter>
+        <SheetFooter className='sticky'>
           <SheetClose asChild>
-            <div className='flex justify-end gap-2 mt-4'>
-              <Button variant='ghost' onClick={onClose} type='submit'>
+            <div className='flex justify-end gap-2 mt-6'>
+              <Button variant='ghost' onClick={onClose}>
                 Cancel
               </Button>
-              <Button onClick={onSave} type='submit'>
-                Save
-              </Button>
+              <Button onClick={onSave}>Save</Button>
             </div>
           </SheetClose>
         </SheetFooter>

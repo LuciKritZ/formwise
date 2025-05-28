@@ -5,6 +5,8 @@ import { useDragAndDrop } from '@/components/dnd/use-drag-and-drop';
 import { EditingPanel } from '@/components/editing-panel';
 import PreviewPanel from '@/components/preview-panel';
 import { useFormStore } from '@/hooks/use-form-store';
+import { cn } from '@/utils/cn';
+import { spaceGrotesk } from '@/utils/fonts';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -17,14 +19,16 @@ const App = () => {
   const { formFields, selectedFieldId } = useFormStore();
   const { items, handleDragEnd } = useDragAndDrop(formFields);
   return (
-    <DndWrapper items={items} onDragEnd={handleDragEnd}>
-      <Sidebar />
-      <div className='flex flex-row flex-1'>
-        <FormBuilder />
-        <PreviewPanel />
-        {selectedFieldId && <EditingPanel />}
-      </div>
-    </DndWrapper>
+    <div className={cn(spaceGrotesk.className, 'flex flex-1')}>
+      <DndWrapper items={items} onDragEnd={handleDragEnd}>
+        <Sidebar />
+        <div className='flex flex-row flex-1'>
+          <FormBuilder />
+          <PreviewPanel />
+          {selectedFieldId && <EditingPanel />}
+        </div>
+      </DndWrapper>
+    </div>
   );
 };
 
