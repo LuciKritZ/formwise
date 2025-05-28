@@ -6,7 +6,7 @@ import { Label } from './ui/label';
 const PreviewPanel: React.FC = () => {
   const { formFields } = useFormStore();
   return (
-    <aside className='w-1/3 bg-gray-50 p-4 border-l overflow-auto'>
+    <aside className='w-1/3 bg-gray-50 p-4 overflow-auto'>
       <h2 className='font-bold mb-4'>Live Preview</h2>
 
       {formFields.length === 0 ? (

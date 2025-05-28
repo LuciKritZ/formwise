@@ -7,7 +7,7 @@ import { FIELDS } from '@/constants/fields';
 
 const Sidebar: React.FC = () => {
   return (
-    <aside className='w-64 bg-gray-100 p-4 border-r'>
+    <aside className='w-64 bg-gray-100 p-4'>
       <Card>
         <CardHeader className='font-bold text-lg'>Form Elements</CardHeader>
 

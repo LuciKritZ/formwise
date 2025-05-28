@@ -30,7 +30,7 @@ const LayoutEditor: FC<LayoutProps> = ({
 
   return (
     <div className='space-y-4'>
-      <h3 className='font-semibold text-lg'>Layout Info</h3>
+      <h3 className='font-semibold text-lg underline'>Layout Info</h3>
 
       <div className='space-y-2'>
         <Label className='block text-sm font-medium'>Width</Label>
