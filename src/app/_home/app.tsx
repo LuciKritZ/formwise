@@ -22,12 +22,10 @@ const App = () => {
     <div className={cn(spaceGrotesk.className, 'flex flex-1')}>
       <DndWrapper items={items} onDragEnd={handleDragEnd}>
         <Sidebar />
-        <div className='flex flex-row flex-1'>
-          <FormBuilder />
-          <PreviewPanel />
-          {selectedFieldId && <EditingPanel />}
-        </div>
+        <FormBuilder />
+        {selectedFieldId && <EditingPanel />}
       </DndWrapper>
+      <PreviewPanel />
     </div>
   );
 };

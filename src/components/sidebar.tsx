@@ -1,28 +1,22 @@
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { FormField } from '@/types/field';
-import { Card, CardHeader, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { FIELDS } from '@/constants/fields';
 
 const Sidebar: React.FC = () => {
   return (
     <aside className='w-64 bg-gray-100 p-4'>
-      <Card>
-        <CardHeader className='font-bold text-lg'>Form Elements</CardHeader>
+      <h2 className='section-heading'>Form Elements</h2>
 
-        <CardContent>
-          <div className='flex flex-col gap-2 mb-4'>
-            {FIELDS.map((field) => (
-              <DraggableField
-                key={field.key}
-                id={field.key}
-                label={field.basic?.label ?? ''}
-              />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className='flex flex-col mb-4'>
+        {FIELDS.map((field) => (
+          <DraggableField
+            key={field.key}
+            id={field.key}
+            label={field.basic?.label ?? ''}
+          />
+        ))}
+      </div>
     </aside>
   );
 };
@@ -53,7 +47,7 @@ const DraggableField: React.FC<DraggableFieldType> = ({
       style={style}
       {...listeners}
       {...attributes}
-      className='justify-start'
+      className='draggable-form-field'
       variant='outline'
     >
       {label}
