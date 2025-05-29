@@ -56,10 +56,7 @@ export const EditingPanel = () => {
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={onClose} modal>
-      <SheetContent
-        aria-describedby=''
-        className='overflow-y-scroll space-y-6 min-w-[100%]'
-      >
+      <SheetContent aria-describedby='' className='space-y-6 min-w-[100%]'>
         <SheetHeader>
           <SheetTitle>Edit Field</SheetTitle>
         </SheetHeader>
@@ -83,9 +80,9 @@ export const EditingPanel = () => {
           )}
 
           {/* Field Editors Section */}
-          <div className='col-span-2 flex flex-col'>
+          <div className='col-span-2 flex flex-col border border-border/50'>
             <div className='flex'>
-              <div className='w-1/2 p-4 border border-gray-300'>
+              <div className='w-1/2 p-4'>
                 {validations && (
                   <ValidationEditor
                     validations={validations}
@@ -93,14 +90,14 @@ export const EditingPanel = () => {
                   />
                 )}
               </div>
-              <div className='w-1/2 p-4 border border-gray-300'>
+              <div className='w-1/2 p-4'>
                 {layout && (
                   <LayoutEditor layoutInfo={layout} onChange={setLayout} />
                 )}
               </div>
             </div>
 
-            <div className='w-full p-4 border border-gray-300'>
+            <div className='w-full p-4'>
               {basic && (
                 <BasicFieldEditor basicFieldInfo={basic} onChange={setBasic} />
               )}

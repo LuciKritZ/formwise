@@ -55,31 +55,35 @@ const FormBuilder: FC = () => {
 
   return (
     <div
-      ref={setNodeRef}
       id='form-builder'
-      className='flex-1 p-4 bg-white border-l border-r overflow-auto min-h-screen'
+      className='flex flex-1 p-4 bg-white border-l border-r overflow-auto h-screen flex-col'
     >
-      <h2 className='font-bold mb-4'>Form Builder</h2>
-      <SortableContext
-        items={formFields.map((f) => f.key)}
-        strategy={verticalListSortingStrategy}
-      >
-        {formFields.length === 0 && (
-          <p className='text-gray-400'>Drag form elements here</p>
-        )}
-        {formFields.map((field) => (
-          <SortableItem
-            key={field.key}
-            id={field.key}
-            label={field.basic?.label}
-            onDelete={(id) => removeField(id)}
-            onSelect={(id) => setSelectedFieldId(id)}
-            isSelected={selectedFieldId === field.key}
-          />
-        ))}
-      </SortableContext>
+      <h2 className='section-heading'>Form Builder</h2>
+      <div ref={setNodeRef} className='flex-1'>
+        <SortableContext
+          items={formFields.map((f) => f.key)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div>
+            {formFields.length === 0 && (
+              <p className='text-gray-400'>Drag form elements here</p>
+            )}
 
-      <div className='flex gap-4 p-4'>
+            {formFields.map((field) => (
+              <SortableItem
+                key={field.key}
+                id={field.key}
+                label={field.basic?.label}
+                onDelete={(id) => removeField(id)}
+                onSelect={(id) => setSelectedFieldId(id)}
+                isSelected={selectedFieldId === field.key}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </div>
+
+      <div className='flex gap-4 p-4 max-h-[68px]'>
         <Button onClick={saveForm} variant='default'>
           Save
         </Button>
@@ -93,7 +97,8 @@ const FormBuilder: FC = () => {
 
 export default FormBuilder;
 
-interface SortableItemProps extends Omit<FormField, 'basic'> {
+interface SortableItemProps extends Omit<FormField, 'basic' | 'type'> {
+  id: string;
   label: string;
   onDelete: (id: string) => void;
   onSelect: (id: string) => void;
@@ -120,14 +125,6 @@ function SortableItem({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    padding: '0.5rem 1rem',
-    marginBottom: '0.5rem',
-    border: `2px solid ${isSelected ? '#3b82f6' : '#ddd'}`,
-    borderRadius: '0.25rem',
-    backgroundColor: 'white',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
   };
 
   return (
@@ -138,6 +135,7 @@ function SortableItem({
         e.stopPropagation();
         onSelect(id);
       }}
+      className='draggable-form-field'
     >
       {/* Left: Drag handle only */}
       <div

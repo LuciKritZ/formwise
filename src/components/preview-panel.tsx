@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFormStore } from '@/hooks/use-form-store';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 
 const PreviewPanel: React.FC = () => {
   const { formFields } = useFormStore();
+  const isMounted = useRef<boolean>(false);
+
+  useEffect(() => {
+    isMounted.current = true;
+  }, []);
+
+  if (!isMounted) {
+    return;
+  }
+
   return (
     <aside className='w-1/3 bg-gray-50 p-4 overflow-auto'>
-      <h2 className='font-bold mb-4'>Live Preview</h2>
+      <h2 className='section-heading'>Live Preview</h2>
 
       {formFields.length === 0 ? (
         <p className='text-gray-400'>Add fields to see preview</p>
