@@ -1,34 +1,36 @@
-import { useFormStoreBase } from '@/store/form';
+import { useFormStore as useFormStoreBase } from '@/store/form';
 
 export const useFormStore = () => {
-  const formFields = useFormStoreBase((s) => s.formFields);
-  const selectedFieldId = useFormStoreBase((s) => s.selectedFieldId);
-  const addField = useFormStoreBase((s) => s.addField);
-  const removeField = useFormStoreBase((s) => s.removeField);
-  const updateField = useFormStoreBase((s) => s.updateField);
-  const clearForm = useFormStoreBase((s) => s.clearForm);
-  const setSelectedFieldId = useFormStoreBase((s) => s.setSelectedFieldId);
-  const moveField = useFormStoreBase((s) => s.moveField);
-  const setFormFields = useFormStoreBase((s) => s.setFormFields);
-  const selectedField = useFormStoreBase((s) => {
-    const { formFields, selectedFieldId } = s;
-    if (!selectedFieldId) {
-      return null;
-    }
-
-    return formFields.find((field) => field.key === selectedFieldId) ?? null;
-  });
+  const store = useFormStoreBase();
 
   return {
-    formFields,
-    selectedFieldId,
-    addField,
-    removeField,
-    updateField,
-    clearForm,
-    setSelectedFieldId,
-    moveField,
-    setFormFields,
-    selectedField,
+    // State
+    fields: store.fields,
+    values: store.values,
+    errors: store.errors,
+    isDirty: store.isDirty,
+    isValid: store.isValid,
+    isSubmitting: store.isSubmitting,
+    selectedFieldId: store.selectedFieldId,
+    selectedField: store.selectedFieldId
+      ? store.getFieldByKey(store.selectedFieldId)
+      : null,
+
+    // Actions
+    addField: store.addField,
+    removeField: store.removeField,
+    updateField: store.updateField,
+    moveField: store.moveField,
+    setFields: store.setFields,
+    setSelectedFieldId: store.setSelectedFieldId,
+    updateFieldValidations: store.updateFieldValidations,
+    clearForm: store.clearForm,
+    setFieldErrors: store.setFieldErrors,
+    setFieldState: store.setFieldState,
+
+    // Selectors
+    getFieldByKey: store.getFieldByKey,
+    getFieldErrors: store.getFieldErrors,
+    isFieldValid: store.isFieldValid,
   };
 };

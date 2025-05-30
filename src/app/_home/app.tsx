@@ -9,6 +9,7 @@ import { cn } from '@/utils/cn';
 import { spaceGrotesk } from '@/utils/fonts';
 import dynamic from 'next/dynamic';
 import React from 'react';
+import { FormField } from '@/types/field';
 
 const Sidebar = dynamic(() => import('@/components/sidebar'), { ssr: false });
 const FormBuilder = dynamic(() => import('@/components/form-builder'), {
@@ -16,8 +17,8 @@ const FormBuilder = dynamic(() => import('@/components/form-builder'), {
 });
 
 const App = () => {
-  const { formFields, selectedFieldId } = useFormStore();
-  const { items, handleDragEnd } = useDragAndDrop(formFields);
+  const { fields, selectedFieldId } = useFormStore();
+  const { items, handleDragEnd } = useDragAndDrop<FormField>(fields);
   return (
     <div className={cn(spaceGrotesk.className, 'flex flex-1')}>
       <DndWrapper items={items} onDragEnd={handleDragEnd}>

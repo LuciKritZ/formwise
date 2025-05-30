@@ -14,8 +14,8 @@ import { TrashIcon } from 'lucide-react';
 
 const FormBuilder: FC = () => {
   const {
-    formFields,
-    setFormFields,
+    fields,
+    setFields,
     removeField,
     selectedFieldId,
     setSelectedFieldId,
@@ -24,7 +24,7 @@ const FormBuilder: FC = () => {
 
   const saveForm = () => {
     try {
-      localStorage.setItem('formwise_fields', JSON.stringify(formFields));
+      localStorage.setItem('formwise_fields', JSON.stringify(fields));
       toast({
         title: 'Form saved locally!',
         variant: 'default',
@@ -40,7 +40,7 @@ const FormBuilder: FC = () => {
   const loadForm = () => {
     const saved = localStorage.getItem('formwise_fields');
     if (saved) {
-      setFormFields(JSON.parse(saved));
+      setFields(JSON.parse(saved));
       toast({
         title: 'Form loaded locally!',
         variant: 'default',
@@ -61,15 +61,15 @@ const FormBuilder: FC = () => {
       <h2 className='section-heading'>Form Builder</h2>
       <div ref={setNodeRef} className='flex-1'>
         <SortableContext
-          items={formFields.map((f) => f.key)}
+          items={fields.map((f) => f.key)}
           strategy={verticalListSortingStrategy}
         >
           <div>
-            {formFields.length === 0 && (
+            {fields.length === 0 && (
               <p className='text-gray-400'>Drag form elements here</p>
             )}
 
-            {formFields.map((field) => (
+            {fields.map((field) => (
               <SortableItem
                 key={field.key}
                 id={field.key}
