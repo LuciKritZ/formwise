@@ -4,26 +4,26 @@ import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 
 const PreviewPanel: React.FC = () => {
-  const { formFields } = useFormStore();
+  const { fields } = useFormStore();
   const isMounted = useRef<boolean>(false);
 
   useEffect(() => {
     isMounted.current = true;
   }, []);
 
-  if (!isMounted) {
-    return;
+  if (!isMounted.current) {
+    return null;
   }
 
   return (
     <aside className='w-1/3 bg-gray-50 p-4 overflow-auto'>
       <h2 className='section-heading'>Live Preview</h2>
 
-      {formFields.length === 0 ? (
+      {fields.length === 0 ? (
         <p className='text-gray-400'>Add fields to see preview</p>
       ) : (
         <form className='space-y-4'>
-          {formFields.map((field) => {
+          {fields.map((field) => {
             switch (field.type) {
               case 'text':
                 return (
@@ -34,7 +34,7 @@ const PreviewPanel: React.FC = () => {
                     <input
                       type='text'
                       className='w-full px-3 py-2 border rounded'
-                      placeholder={field.basic?.label}
+                      placeholder={field.basic?.placeholder}
                     />
                   </div>
                 );
